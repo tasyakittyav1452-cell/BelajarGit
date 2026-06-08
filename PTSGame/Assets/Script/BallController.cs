@@ -5,6 +5,8 @@ public class BallController : MonoBehaviour
     public PlayerData data;
     private Rigidbody2D rb;
 
+    
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

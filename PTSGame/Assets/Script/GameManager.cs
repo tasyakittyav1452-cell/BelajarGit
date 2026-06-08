@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Untuk merestart game
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,7 +8,10 @@ public class GameManager : MonoBehaviour
     public GameObject tombolPlay;
     public GameObject panelGameOver;
     public Transform bola;
-    
+
+    // Variabel penting untuk membuka kunci pergerakan peluru
+    public bool isGameActive = false;
+
     private Vector3 posisiAwalBola;
 
     void Awake()
@@ -21,44 +24,28 @@ public class GameManager : MonoBehaviour
         if (bola != null) posisiAwalBola = bola.position;
         if (panelGameOver != null) panelGameOver.SetActive(false);
         if (tombolPlay != null) tombolPlay.SetActive(true);
+
+        isGameActive = false; // Game belum mulai di awal
     }
 
-    // Fungsi dipanggil saat tombol Play diklik
+    // Fungsi ini HARUS dipanggil oleh tombol PLAY di Canvas kamu
     public void GameDimulai()
     {
-        if (tombolPlay != null) tombolPlay.SetActive(false); // Sembunyikan tombol Play
+        if (tombolPlay != null) tombolPlay.SetActive(false);
+        isGameActive = true; // Mengaktifkan pergerakan peluru!
     }
 
-    // Fungsi dipanggil ketika bola keluar batas
     public void TriggerGameOver()
     {
-        if (panelGameOver != null) panelGameOver.SetActive(true); // Memunculkan Game Over
-        
-        // Hentikan gerakan bola
+        if (panelGameOver != null) panelGameOver.SetActive(true);
+        isGameActive = false;
+
         Rigidbody2D rb = bola.GetComponent<Rigidbody2D>();
         if (rb != null) rb.linearVelocity = Vector2.zero;
     }
 
-    // Fungsi dipanggil oleh tombol Restart/Resume untuk mengulang
     public void RestartGame()
     {
-        // Memuat ulang scene yang sedang aktif agar kembali bersih
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-private bool isPaused = false;
-
-public void TogglePause()
-{
-    isPaused = !isPaused;
-
-    if (isPaused)
-    {
-        Time.timeScale = 0f; // Menghentikan seluruh waktu di game (Freeze)
-    }
-    else
-    {
-        Time.timeScale = 1f; // Menjalankan kembali game normal
-    }
-}
-
 }
